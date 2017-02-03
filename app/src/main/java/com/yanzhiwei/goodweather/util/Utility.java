@@ -2,13 +2,17 @@ package com.yanzhiwei.goodweather.util;
 
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.yanzhiwei.goodweather.db.City;
 import com.yanzhiwei.goodweather.db.County;
 import com.yanzhiwei.goodweather.db.Province;
+import com.yanzhiwei.goodweather.gson.Weather;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static com.yanzhiwei.goodweather.util.Constant.HE_WEATHER;
 
 /**
  *实用工具类
@@ -93,6 +97,22 @@ public class Utility {
         return false;
     }
 
-
+    /**
+     * 将返回的JSON数据解析成Weather对象
+     * @param response
+     * @return
+     */
+    public static Weather handlerWeatherResponse(String response){
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray(HE_WEATHER);
+            String weatherContent = jsonArray.getJSONObject(0).toString();
+            Weather weather = new Gson().fromJson(weatherContent,Weather.class);
+            return weather;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

@@ -20,5 +20,11 @@ public class Constant {
     /**中国全部省的列表***/
     public static final String CHINA_PROVINCES_URL = "http://guolin.tech/api/china";
 
+    public static final String PERFERENCE_WEATHER = "weather";
+    public static final String HE_WEATHER = "HeWeather";
+    public static final String WEATHER_ID = "weather_id";
+
+    public static final String REQUEST_WEATHER_HEAD  = "http://guolin.tech/api/weather?cityid=";
+    public static final String HE_WEATHER_API_KEY = "&key=c782e9816fb447fa90a42e7f517dc360";
 
 }

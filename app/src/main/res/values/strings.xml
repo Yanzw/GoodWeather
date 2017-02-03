@@ -3,4 +3,14 @@
     <string name="china">China</string>
     <string name="dialog_loading">Loading...</string>
     <string name="dialog_load_fail">Load fail</string>
+    <string name="date">Date</string>
+    <string name="weather">Weather</string>
+    <string name="temp_max">Temp max</string>
+    <string name="temp_min">Temp min</string>
+    <string name="forecast">Forecast</string>
+    <string name="air_quality">Air Quality</string>
+    <string name="aqi_index">AQI Index</string>
+    <string name="pm25_index">PM2.5 Index</string>
+    <string name="life_suggestion">Life Suggestion</string>
+
 </resources>
