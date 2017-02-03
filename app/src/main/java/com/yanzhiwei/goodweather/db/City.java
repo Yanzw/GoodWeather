@@ -14,7 +14,7 @@ public class City extends DataSupport {
     private String cityName;
     /**市的代号**/
     private int cityCode;
-    /**该市所属的省的代号**/
+    /**该市所属的省的id**/
     private int provinceId;
 
     public int getId() {
