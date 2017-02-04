@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -46,6 +47,7 @@ public class WeatherActivity extends AppCompatActivity {
     private TextView carwashText;
     private TextView sportText;
     private ImageView bingPicImg;
+    private SwipeRefreshLayout swipeRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,16 +63,27 @@ public class WeatherActivity extends AppCompatActivity {
         initView();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherString = preferences.getString(Constant.PERFERENCE_WEATHER, "");
+        final String weatherId;
         if (!TextUtils.isEmpty(weatherString)) {
             //有缓存直接解析天气数据
             Weather weather = Utility.handlerWeatherResponse(weatherString);
+            weatherId = weather.basic.weatherId;
             showWeatherInfo(weather);
         } else {
             //无缓存时候联网查询天气数据
-            String weatherId = getIntent().getStringExtra(Constant.WEATHER_ID);
+            weatherId = getIntent().getStringExtra(Constant.WEATHER_ID);
             weatherLayout.setVisibility(View.INVISIBLE);
             requestWeather(weatherId);
         }
+        //下拉刷新数据
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout
+                .OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                requestWeather(weatherId);
+            }
+        });
+
         String bingPicUrl = preferences.getString(PERFERENCE_BING_PIC, null);
         if (!TextUtils.isEmpty(bingPicUrl)) {
             Glide.with(this).load(bingPicUrl).into(bingPicImg);
@@ -96,6 +109,8 @@ public class WeatherActivity extends AppCompatActivity {
         carwashText = (TextView) findViewById(R.id.car_wash_text);
         sportText = (TextView) findViewById(R.id.sport_text);
         bingPicImg = (ImageView) findViewById(R.id.bing_pic_img);
+        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
     }
 
     /**
@@ -115,6 +130,7 @@ public class WeatherActivity extends AppCompatActivity {
                         Toast.makeText(WeatherActivity.this,
                                 getString(R.string.get_weather_data_fail), Toast.LENGTH_SHORT)
                                 .show();
+                        swipeRefresh.setRefreshing(false);
                     }
                 });
             }
@@ -134,11 +150,15 @@ public class WeatherActivity extends AppCompatActivity {
                             editor.putString(Constant.PERFERENCE_WEATHER, responseText);
                             editor.apply();
                             showWeatherInfo(weather);
+                            Toast.makeText(WeatherActivity.this,
+                                    getString(R.string.get_weather_data_success), Toast.LENGTH_SHORT)
+                                    .show();
                         } else {
                             Toast.makeText(WeatherActivity.this,
                                     getString(R.string.get_weather_data_fail), Toast.LENGTH_SHORT)
                                     .show();
                         }
+                        swipeRefresh.setRefreshing(false);
                     }
                 });
 
@@ -183,9 +203,9 @@ public class WeatherActivity extends AppCompatActivity {
             pm25Text.setText(weather.aqi.city.pm25);
         }
 
-        String comfort = getString(R.string.comf_index)+ weather.suggestion.comfort.info;
+        String comfort = getString(R.string.comf_index) + weather.suggestion.comfort.info;
         String carWash = getString(R.string.carwash_index) + weather.suggestion.carWash.info;
-        String sport = getString(R.string.sport_index)+ weather.suggestion.sport.info;
+        String sport = getString(R.string.sport_index) + weather.suggestion.sport.info;
         comfortText.setText(comfort);
         carwashText.setText(carWash);
         sportText.setText(sport);

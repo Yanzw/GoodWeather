@@ -14,6 +14,7 @@
     <string name="aqi_index">AQI 指数</string>
     <string name="pm25_index">PM2.5 指数</string>
     <string name="get_weather_data_fail">获取天气数据失败</string>
+    <string name="get_weather_data_success">获取天气数据成功</string>
     <string name="comf_index">舒适度：</string>
     <string name="carwash_index">洗车指数：</string>
     <string name="sport_index">运动指数：</string>
