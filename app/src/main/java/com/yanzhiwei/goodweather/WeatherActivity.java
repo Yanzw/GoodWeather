@@ -1,5 +1,6 @@
 package com.yanzhiwei.goodweather;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -22,8 +23,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.yanzhiwei.goodweather.gson.Forecast;
 import com.yanzhiwei.goodweather.gson.Weather;
+import com.yanzhiwei.goodweather.service.AutoUpdateDataService;
 import com.yanzhiwei.goodweather.util.Constant;
 import com.yanzhiwei.goodweather.util.HttpUtil;
+import com.yanzhiwei.goodweather.util.LogUtil;
 import com.yanzhiwei.goodweather.util.Utility;
 
 import java.io.IOException;
@@ -37,6 +40,7 @@ import static com.yanzhiwei.goodweather.util.Constant.REQUEST_BING_PIC;
 
 
 public class WeatherActivity extends AppCompatActivity {
+    private static final String TAG = "WeatherActivity";
 
     private ScrollView weatherLayout;
     private TextView titleCity;
@@ -53,6 +57,7 @@ public class WeatherActivity extends AppCompatActivity {
     public SwipeRefreshLayout swipeRefresh;
     private Button navButton;
     public DrawerLayout drawerLayout;
+    private String mTempWeatherId = ""; //保存从Fragment发送的weatherId
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +73,12 @@ public class WeatherActivity extends AppCompatActivity {
         initView();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherString = preferences.getString(Constant.PERFERENCE_WEATHER, "");
-        final String weatherId;
+         String weatherId;
         if (!TextUtils.isEmpty(weatherString)) {
             //有缓存直接解析天气数据
             Weather weather = Utility.handlerWeatherResponse(weatherString);
             weatherId = weather.basic.weatherId;
+            mTempWeatherId = weatherId;
             showWeatherInfo(weather);
         } else {
             //无缓存时候联网查询天气数据
@@ -85,7 +91,8 @@ public class WeatherActivity extends AppCompatActivity {
                 .OnRefreshListener() {
             @Override
             public void onRefresh() {
-                requestWeather(weatherId);
+                LogUtil.d(TAG,"mTempWeatherId = "+mTempWeatherId);
+                requestWeather(mTempWeatherId);
             }
         });
 
@@ -133,6 +140,7 @@ public class WeatherActivity extends AppCompatActivity {
      * @param weatherId
      */
     public void requestWeather(String weatherId) {
+        mTempWeatherId = weatherId;
         String weatherUrl = Constant.REQUEST_WEATHER_HEAD
                 + weatherId + Constant.HE_WEATHER_API_KEY;
         HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
@@ -224,6 +232,9 @@ public class WeatherActivity extends AppCompatActivity {
         carwashText.setText(carWash);
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
+        //启动定时更新数据的Service
+        Intent intent = new Intent(this, AutoUpdateDataService.class);
+        startService(intent);
     }
 
     /**

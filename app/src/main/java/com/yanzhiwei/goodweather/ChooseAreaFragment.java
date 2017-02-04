@@ -19,6 +19,7 @@ import com.yanzhiwei.goodweather.db.City;
 import com.yanzhiwei.goodweather.db.County;
 import com.yanzhiwei.goodweather.db.Province;
 import com.yanzhiwei.goodweather.util.HttpUtil;
+import com.yanzhiwei.goodweather.util.LogUtil;
 import com.yanzhiwei.goodweather.util.Utility;
 
 import org.litepal.crud.DataSupport;
@@ -39,6 +40,7 @@ import static com.yanzhiwei.goodweather.util.Constant.WEATHER_ID;
  */
 
 public class ChooseAreaFragment extends Fragment {
+    private static final String TAG = "ChooseAreaFragment";
 
     public static final int LEVEL_RPOVINCE = 0;
     public static final int LEVEL_CITY = 1;
@@ -114,6 +116,7 @@ public class ChooseAreaFragment extends Fragment {
                         weatherActivity.drawerLayout.closeDrawers();
                         weatherActivity.swipeRefresh.setRefreshing(true);
                         weatherActivity.requestWeather(weatherId);
+                        LogUtil.d(TAG,"weatherId = "+weatherId);
                     }
                 }
             }
