@@ -25,7 +25,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:gravity="left"
             android:text="@string/date"
             android:textColor="@android:color/white"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/temp_min"
+            android:text="@string/temp_max"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             tools:text="最高" />

@@ -4,8 +4,14 @@
     android:id="@+id/activity_weather"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/half_transparent"
     tools:context="com.yanzhiwei.goodweather.WeatherActivity">
+
+    <ImageView
+        android:id="@+id/bing_pic_img"
+        android:scaleType="centerCrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <ScrollView
         android:id="@+id/weather_layout"
@@ -15,6 +21,7 @@
         android:scrollbars="none">
 
         <LinearLayout
+            android:fitsSystemWindows="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">

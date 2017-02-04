@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GoodWeather</string>
     <string name="china">China</string>
@@ -12,5 +13,9 @@
     <string name="aqi_index">AQI Index</string>
     <string name="pm25_index">PM2.5 Index</string>
     <string name="life_suggestion">Life Suggestion</string>
+    <string name="get_weather_data_fail">Get the weather data fail.</string>
+    <string name="comf_index">Comfort Index:</string>
+    <string name="carwash_index">Wash car Index:</string>
+    <string name="sport_index">Sport Index:</string>
 
 </resources>
