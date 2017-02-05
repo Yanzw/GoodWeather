@@ -15,7 +15,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -111,18 +110,17 @@ public class WeatherActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         //联网查询天气数据
         String  weatherId = getIntent().getStringExtra(Constant.WEATHER_ID);
         weatherLayout.setVisibility(View.INVISIBLE);
         mTempWeatherId = weatherId;
         requestWeather(weatherId);
-        Log.d(TAG, "onStart: weatherId ="+weatherId);
+        LogUtil.d(TAG, "onRestart: weatherId ="+weatherId);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override

@@ -71,7 +71,7 @@ public class AutoUpdateDataService extends Service {
             Weather weather = Utility.handlerWeatherResponse(weatherString);
             String weatherId = weather.basic.weatherId;
             String weatherUrl = REQUEST_WEATHER_HEAD + weatherId + HE_WEATHER_API_KEY;
-            LogUtil.d(TAG,"weatherId = "+weatherId + " ,weatherUrl = "+weatherUrl);
+//            LogUtil.d(TAG,"weatherId = "+weatherId + " ,weatherUrl = "+weatherUrl);
             HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -87,7 +87,7 @@ public class AutoUpdateDataService extends Service {
                                 .getDefaultSharedPreferences(AutoUpdateDataService.this).edit();
                         editor.putString(PERFERENCE_WEATHER, responseText);
                         editor.apply();
-                        LogUtil.d(TAG,"更新天气数据成功，已保存到SP");
+//                        LogUtil.d(TAG,"更新天气数据成功，已保存到SP");
                     }
                 }
             });
@@ -116,7 +116,7 @@ public class AutoUpdateDataService extends Service {
                                     .edit();
                     editor.putString(PERFERENCE_BING_PIC, responseText);
                     editor.apply();
-                    LogUtil.d(TAG,"更新服务器返回的每日一图成功，已保存到SP");
+//                    LogUtil.d(TAG,"更新服务器返回的每日一图成功，已保存到SP");
                 }
             }
         });
