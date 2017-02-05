@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -15,6 +16,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -111,11 +113,11 @@ public class WeatherActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         //联网查询天气数据
-        String  weatherId = getIntent().getStringExtra(Constant.WEATHER_ID);
+        String weatherId = getIntent().getStringExtra(Constant.WEATHER_ID);
         weatherLayout.setVisibility(View.INVISIBLE);
         mTempWeatherId = weatherId;
         requestWeather(weatherId);
-        LogUtil.d(TAG, "onRestart: weatherId ="+weatherId);
+        LogUtil.d(TAG, "onRestart: weatherId =" + weatherId);
     }
 
     @Override
@@ -132,13 +134,13 @@ public class WeatherActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar,menu);
+        getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
                 break;
@@ -153,7 +155,7 @@ public class WeatherActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar!=null){
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
             actionBar.setDisplayShowTitleEnabled(false);    //设置去除label
@@ -167,9 +169,9 @@ public class WeatherActivity extends AppCompatActivity {
                 .OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.nav_city:
-                        Intent intent = new Intent(WeatherActivity.this,ChooseAreaActivity.class);
+                        Intent intent = new Intent(WeatherActivity.this, ChooseAreaActivity.class);
                         startActivity(intent);
                         break;
                     case R.id.nav_setting:
@@ -279,7 +281,7 @@ public class WeatherActivity extends AppCompatActivity {
         String degree = weather.now.temperature;
         String weatherInfo = weather.now.condition.info;
         titleCity.setText(cityName);
-        titleUpdateTime.setText(getString(R.string.update_time) +" "+ updateTime);
+        titleUpdateTime.setText(getString(R.string.update_time) + " " + updateTime);
         degreeText.setText(degree + "℃");
         weatherInfoText.setText(weatherInfo);
 
@@ -341,6 +343,32 @@ public class WeatherActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    private boolean mIsExit;
+
+    @Override
+/**
+ * 双击返回键退出
+ */
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (mIsExit) {
+                this.finish();
+            } else {
+                Toast.makeText(this, getString(R.string.pressed_again_exit),
+                        Toast.LENGTH_SHORT).show();
+                mIsExit = true;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mIsExit = false;
+                    }
+                }, 2000);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 
