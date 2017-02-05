@@ -18,6 +18,7 @@ public class Constant {
     public static final String COUNTY_NAME = "name";
     public static final String COUNTY_WEATHER_ID = "weather_id";
     public static final String STATUS_OK = "ok";
+    public static final String FROM_ACTIVITY = "FromActivity";
 
     /**URL列表***/
     /**中国全部省的列表***/

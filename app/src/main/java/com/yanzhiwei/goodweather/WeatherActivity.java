@@ -42,12 +42,13 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static com.yanzhiwei.goodweather.util.Constant.FROM_ACTIVITY;
 import static com.yanzhiwei.goodweather.util.Constant.PERFERENCE_BING_PIC;
 import static com.yanzhiwei.goodweather.util.Constant.REQUEST_BING_PIC;
 
 
 public class WeatherActivity extends AppCompatActivity {
-    private static final String TAG = "WeatherActivity";
+    public static final String TAG = "WeatherActivity";
 
     private ScrollView weatherLayout;
     private TextView titleCity;
@@ -82,32 +83,6 @@ public class WeatherActivity extends AppCompatActivity {
         initData();
     }
 
-    private void initData() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String weatherString = preferences.getString(Constant.PERFERENCE_WEATHER, "");
-        String weatherId;
-        if (!TextUtils.isEmpty(weatherString)) {
-            //有缓存直接解析天气数据
-            Weather weather = Utility.handlerWeatherResponse(weatherString);
-            weatherId = weather.basic.weatherId;
-            mTempWeatherId = weatherId;
-            showWeatherInfo(weather);
-        } else {
-            //无缓存时候联网查询天气数据
-            weatherId = getIntent().getStringExtra(Constant.WEATHER_ID);
-            mTempWeatherId = weatherId;
-            weatherLayout.setVisibility(View.INVISIBLE);
-            requestWeather(weatherId);
-        }
-
-        String bingPicUrl = preferences.getString(PERFERENCE_BING_PIC, null);
-        if (!TextUtils.isEmpty(bingPicUrl)) {
-            Glide.with(this).load(bingPicUrl).into(bingPicImg);
-            Glide.with(this).load(bingPicUrl).into(navPicImg);
-        } else {
-            loadBingPic();
-        }
-    }
 
     @Override
     protected void onRestart() {
@@ -172,6 +147,7 @@ public class WeatherActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.nav_city:
                         Intent intent = new Intent(WeatherActivity.this, ChooseAreaActivity.class);
+                        intent.putExtra(FROM_ACTIVITY,TAG);
                         startActivity(intent);
                         break;
                     case R.id.nav_setting:
@@ -212,6 +188,38 @@ public class WeatherActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    /**
+     * 初始化数据
+     */
+    private void initData() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String weatherString = preferences.getString(Constant.PERFERENCE_WEATHER, "");
+        String weatherId;
+        if (!TextUtils.isEmpty(weatherString)) {
+            //有缓存直接解析天气数据
+            Weather weather = Utility.handlerWeatherResponse(weatherString);
+            weatherId = weather.basic.weatherId;
+            mTempWeatherId = weatherId;
+            showWeatherInfo(weather);
+        } else {
+            //无缓存时候联网查询天气数据
+            if (getIntent() != null){
+                weatherId = getIntent().getStringExtra(Constant.WEATHER_ID);
+                mTempWeatherId = weatherId;
+                weatherLayout.setVisibility(View.INVISIBLE);
+                requestWeather(weatherId);
+            }
+        }
+
+        String bingPicUrl = preferences.getString(PERFERENCE_BING_PIC, null);
+        if (!TextUtils.isEmpty(bingPicUrl)) {
+            Glide.with(this).load(bingPicUrl).into(bingPicImg);
+            Glide.with(this).load(bingPicUrl).into(navPicImg);
+        } else {
+            loadBingPic();
+        }
     }
 
     /**
