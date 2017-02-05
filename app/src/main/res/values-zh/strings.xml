@@ -18,5 +18,11 @@
     <string name="comf_index">舒适度：</string>
     <string name="carwash_index">洗车指数：</string>
     <string name="sport_index">运动指数：</string>
+    <string name="update_time">更新时间</string>
+    <string name="menu_setting">设置</string>
+    <string name="menu_exit">退出</string>
+    <string name="nav_city">城市</string>
+    <string name="nav_setting">设置</string>
+    <string name="nav_about">关于</string>
 
 </resources>

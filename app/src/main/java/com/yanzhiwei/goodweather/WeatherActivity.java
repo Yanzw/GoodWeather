@@ -6,14 +6,20 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -55,9 +61,9 @@ public class WeatherActivity extends AppCompatActivity {
     private TextView sportText;
     private ImageView bingPicImg;
     public SwipeRefreshLayout swipeRefresh;
-    private Button navButton;
     public DrawerLayout drawerLayout;
     private String mTempWeatherId = ""; //保存从Fragment发送的weatherId
+    private ImageView navPicImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +78,13 @@ public class WeatherActivity extends AppCompatActivity {
         }
 
         initView();
+        initData();
+    }
+
+    private void initData() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherString = preferences.getString(Constant.PERFERENCE_WEATHER, "");
-         String weatherId;
+        String weatherId;
         if (!TextUtils.isEmpty(weatherString)) {
             //有缓存直接解析天气数据
             Weather weather = Utility.handlerWeatherResponse(weatherString);
@@ -84,39 +94,98 @@ public class WeatherActivity extends AppCompatActivity {
         } else {
             //无缓存时候联网查询天气数据
             weatherId = getIntent().getStringExtra(Constant.WEATHER_ID);
+            mTempWeatherId = weatherId;
             weatherLayout.setVisibility(View.INVISIBLE);
             requestWeather(weatherId);
         }
-        //下拉刷新数据
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout
-                .OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                LogUtil.d(TAG,"mTempWeatherId = "+mTempWeatherId);
-                requestWeather(mTempWeatherId);
-            }
-        });
 
         String bingPicUrl = preferences.getString(PERFERENCE_BING_PIC, null);
         if (!TextUtils.isEmpty(bingPicUrl)) {
             Glide.with(this).load(bingPicUrl).into(bingPicImg);
+            Glide.with(this).load(bingPicUrl).into(navPicImg);
         } else {
             loadBingPic();
         }
+    }
 
-        navButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //联网查询天气数据
+        String  weatherId = getIntent().getStringExtra(Constant.WEATHER_ID);
+        weatherLayout.setVisibility(View.INVISIBLE);
+        mTempWeatherId = weatherId;
+        requestWeather(weatherId);
+        Log.d(TAG, "onStart: weatherId ="+weatherId);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        //更新最新的intent
+        setIntent(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
-
+                break;
+        }
+        return true;
     }
 
     /**
      * 初始化View
      */
     private void initView() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar!=null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+            actionBar.setDisplayShowTitleEnabled(false);    //设置去除label
+        }
+
+        NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
+        View navHeaderView = navView.inflateHeaderView(R.layout.nav_header);
+        navPicImg = (ImageView) navHeaderView.findViewById(R.id.nav_imageview);
+        navView.setCheckedItem(R.id.nav_city);
+        navView.setNavigationItemSelectedListener(new NavigationView
+                .OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.nav_city:
+                        Intent intent = new Intent(WeatherActivity.this,ChooseAreaActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.nav_setting:
+                        break;
+                    case R.id.nav_about:
+                        break;
+
+                }
+
+                drawerLayout.closeDrawers();
+                return true;
+            }
+        });
+
         weatherLayout = (ScrollView) findViewById(R.id.weather_layout);
         titleCity = (TextView) findViewById(R.id.title_city);
         titleUpdateTime = (TextView) findViewById(R.id.title_update_time);
@@ -131,8 +200,18 @@ public class WeatherActivity extends AppCompatActivity {
         bingPicImg = (ImageView) findViewById(R.id.bing_pic_img);
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
-        navButton = (Button) findViewById(R.id.nav_button);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        //下拉刷新数据
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout
+                .OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                LogUtil.d(TAG, "mTempWeatherId = " + mTempWeatherId);
+                requestWeather(mTempWeatherId);
+            }
+        });
+
     }
 
     /**
@@ -141,7 +220,7 @@ public class WeatherActivity extends AppCompatActivity {
      * @param weatherId
      */
     public void requestWeather(String weatherId) {
-        mTempWeatherId = weatherId;
+
         String weatherUrl = Constant.REQUEST_WEATHER_HEAD
                 + weatherId + Constant.HE_WEATHER_API_KEY;
         HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
@@ -202,7 +281,7 @@ public class WeatherActivity extends AppCompatActivity {
         String degree = weather.now.temperature;
         String weatherInfo = weather.now.condition.info;
         titleCity.setText(cityName);
-        titleUpdateTime.setText(updateTime);
+        titleUpdateTime.setText(getString(R.string.update_time) +" "+ updateTime);
         degreeText.setText(degree + "℃");
         weatherInfoText.setText(weatherInfo);
 
@@ -259,6 +338,7 @@ public class WeatherActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Glide.with(WeatherActivity.this).load(bingPic).into(bingPicImg);
+                        Glide.with(WeatherActivity.this).load(bingPic).into(navPicImg);
                     }
                 });
             }

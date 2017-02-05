@@ -4,7 +4,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.yanzhiwei.goodweather.MainActivity">
+    tools:context="com.yanzhiwei.goodweather.ChooseAreaActivity">
 
     <fragment
         android:id="@+id/choose_area_fragment"

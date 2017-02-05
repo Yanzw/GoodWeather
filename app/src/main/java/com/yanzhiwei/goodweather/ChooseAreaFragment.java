@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,6 @@ import com.yanzhiwei.goodweather.db.City;
 import com.yanzhiwei.goodweather.db.County;
 import com.yanzhiwei.goodweather.db.Province;
 import com.yanzhiwei.goodweather.util.HttpUtil;
-import com.yanzhiwei.goodweather.util.LogUtil;
 import com.yanzhiwei.goodweather.util.Utility;
 
 import org.litepal.crud.DataSupport;
@@ -106,18 +106,11 @@ public class ChooseAreaFragment extends Fragment {
                     queryCounties();
                 }else if(currentLevel == LEVEL_COUNTY){
                     String weatherId = countyList.get(position).getWeatherId();
-                    if (getActivity() instanceof MainActivity){
-                        Intent intent = new Intent(getActivity(),WeatherActivity.class);
-                        intent.putExtra(WEATHER_ID,weatherId);
-                        startActivity(intent);
-                        getActivity().finish();
-                    }else if (getActivity() instanceof WeatherActivity){
-                        WeatherActivity weatherActivity = (WeatherActivity) getActivity();
-                        weatherActivity.drawerLayout.closeDrawers();
-                        weatherActivity.swipeRefresh.setRefreshing(true);
-                        weatherActivity.requestWeather(weatherId);
-                        LogUtil.d(TAG,"weatherId = "+weatherId);
-                    }
+                    Intent intent = new Intent(getActivity(),WeatherActivity.class);
+                    intent.putExtra(WEATHER_ID,weatherId);
+                    startActivity(intent);
+                    Log.d(TAG, "weatherId: "+weatherId);
+                    getActivity().finish();
                 }
             }
         });
@@ -241,6 +234,15 @@ public class ChooseAreaFragment extends Fragment {
                             } else if (type.equals(COUNTY_TYPE)) {
                                 queryCounties();
                             }
+                        }
+                    });
+                }else{
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            closeProgressDialog();
+                            Toast.makeText(getActivity(),getString(R.string.dialog_load_fail),
+                                    Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
