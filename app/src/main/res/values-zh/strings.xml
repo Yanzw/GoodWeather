@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">风和天气</string>
+    <string name="app_name">Good天气</string>
     <string name="china">中国</string>
     <string name="dialog_loading">正在加载...</string>
     <string name="dialog_load_fail">加载失败</string>

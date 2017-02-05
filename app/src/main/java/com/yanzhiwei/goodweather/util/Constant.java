@@ -1,5 +1,7 @@
 package com.yanzhiwei.goodweather.util;
 
+import static com.yanzhiwei.goodweather.BuildConfig.MY_WEATHER_MAP_API_KEY;
+
 /**
  * 常量类
  * Created by yanzhiwei on 2017/2/3.
@@ -27,7 +29,7 @@ public class Constant {
     public static final String WEATHER_ID = "weather_id";
 
     public static final String REQUEST_WEATHER_HEAD  = "http://guolin.tech/api/weather?cityid=";
-    public static final String HE_WEATHER_API_KEY = "&key=c782e9816fb447fa90a42e7f517dc360";
+    public static final String HE_WEATHER_API_KEY = "&key="+ MY_WEATHER_MAP_API_KEY;
     public static final String REQUEST_BING_PIC = "http://guolin.tech/api/bing_pic";
 
 }
