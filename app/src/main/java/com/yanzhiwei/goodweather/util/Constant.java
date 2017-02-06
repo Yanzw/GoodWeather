@@ -26,7 +26,8 @@ public class Constant {
 
     public static final String PERFERENCE_WEATHER = "weather";
     public static final String PERFERENCE_BING_PIC = "bing_pic";
-//    public static final String PERFERENCE_APP_FIRST_START = "app_first_start";
+    public static final String PERFERENCE_AUTO_UPDATE_PIC = "perference_auto_update_pic";
+    public static final String PERFERENCE_AUTO_UPDATE_DATA = "perference_auto_update_data";
     public static final String HE_WEATHER = "HeWeather";
     public static final String WEATHER_ID = "weather_id";
 

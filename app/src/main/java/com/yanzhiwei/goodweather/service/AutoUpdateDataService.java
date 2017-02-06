@@ -44,6 +44,7 @@ public class AutoUpdateDataService extends Service {
         updateWeather();
         updateBingPic();
         repeatStartService();
+        LogUtil.d(TAG,"onStartCommand");
         return super.onStartCommand(intent, flags, startId);
     }
 

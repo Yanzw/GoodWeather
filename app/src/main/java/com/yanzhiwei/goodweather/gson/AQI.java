@@ -13,6 +13,8 @@ public class AQI {
         public String aqi;
         //PM2.5 1小时平均值(ug/m³)
         public String pm25;
+        //空气质量
+        public String qlty;
 
     }
 

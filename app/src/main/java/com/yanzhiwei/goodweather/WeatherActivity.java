@@ -43,6 +43,8 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import static com.yanzhiwei.goodweather.util.Constant.FROM_ACTIVITY;
+import static com.yanzhiwei.goodweather.util.Constant.PERFERENCE_AUTO_UPDATE_DATA;
+import static com.yanzhiwei.goodweather.util.Constant.PERFERENCE_AUTO_UPDATE_PIC;
 import static com.yanzhiwei.goodweather.util.Constant.PERFERENCE_BING_PIC;
 import static com.yanzhiwei.goodweather.util.Constant.REQUEST_BING_PIC;
 
@@ -66,6 +68,8 @@ public class WeatherActivity extends AppCompatActivity {
     public DrawerLayout drawerLayout;
     private String mTempWeatherId = ""; //保存从Fragment发送的weatherId
     private ImageView navPicImg;
+    private TextView aqiQualityText;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +93,7 @@ public class WeatherActivity extends AppCompatActivity {
         super.onRestart();
         //联网查询天气数据
         String weatherId = getIntent().getStringExtra(Constant.WEATHER_ID);
-        if (weatherId!=null &&! mTempWeatherId.equals(weatherId)){
+        if (weatherId != null && !mTempWeatherId.equals(weatherId)) {
             mTempWeatherId = weatherId;
             requestWeather(weatherId);
         }
@@ -148,10 +152,12 @@ public class WeatherActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.nav_city:
                         Intent intent = new Intent(WeatherActivity.this, ChooseAreaActivity.class);
-                        intent.putExtra(FROM_ACTIVITY,TAG);
+                        intent.putExtra(FROM_ACTIVITY, TAG);
                         startActivity(intent);
                         break;
                     case R.id.nav_setting:
+                        Intent intentSetting = new Intent(WeatherActivity.this, SettingActivity.class);
+                        startActivity(intentSetting);
                         break;
                     case R.id.nav_about:
                         break;
@@ -178,6 +184,7 @@ public class WeatherActivity extends AppCompatActivity {
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        aqiQualityText = (TextView) findViewById(R.id.aqi_quality);
 
         //下拉刷新数据
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout
@@ -195,7 +202,7 @@ public class WeatherActivity extends AppCompatActivity {
      * 初始化数据
      */
     private void initData() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherString = preferences.getString(Constant.PERFERENCE_WEATHER, "");
         String weatherId;
         if (!TextUtils.isEmpty(weatherString)) {
@@ -206,7 +213,7 @@ public class WeatherActivity extends AppCompatActivity {
             showWeatherInfo(weather);
         } else {
             //无缓存时候联网查询天气数据
-            if (getIntent() != null){
+            if (getIntent() != null) {
                 weatherId = getIntent().getStringExtra(Constant.WEATHER_ID);
                 mTempWeatherId = weatherId;
                 weatherLayout.setVisibility(View.INVISIBLE);
@@ -293,6 +300,13 @@ public class WeatherActivity extends AppCompatActivity {
         titleUpdateTime.setText(getString(R.string.update_time) + " " + updateTime);
         degreeText.setText(degree + "℃");
         weatherInfoText.setText(weatherInfo);
+        if (weather.aqi != null) {
+            String aqiQuality = weather.aqi.city.qlty;
+            aqiQualityText.setText(getString(R.string.air_quality) + ": " + aqiQuality);
+        } else {
+            aqiQualityText.setText(getString(R.string.air_quality) + ": "
+                    + getString(R.string.data_return_null));
+        }
 
         forecastLayout.removeAllViews();
         for (Forecast forecast : weather.forecastList) {
@@ -321,15 +335,26 @@ public class WeatherActivity extends AppCompatActivity {
         carwashText.setText(carWash);
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
+
+        boolean ifAutoUpdateData = preferences.getBoolean(PERFERENCE_AUTO_UPDATE_DATA, true);
         //启动定时更新数据的Service
-        Intent intent = new Intent(this, AutoUpdateDataService.class);
-        startService(intent);
+        LogUtil.d(TAG,"ifAutoUpdateData = " + ifAutoUpdateData);
+        if (ifAutoUpdateData) {
+            Intent intent = new Intent(this, AutoUpdateDataService.class);
+            startService(intent);
+        }
     }
 
     /**
      * 请求Bing的每日一图
      */
     private void loadBingPic() {
+        boolean ifAutoLoadPic = preferences.getBoolean(PERFERENCE_AUTO_UPDATE_PIC, true);
+        LogUtil.d(TAG,"loadBingPic = " + ifAutoLoadPic);
+        if (!ifAutoLoadPic) {
+            return;
+        }
+
         HttpUtil.sendOkHttpRequest(REQUEST_BING_PIC, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

@@ -20,4 +20,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="12dp"
+        android:id="@+id/download_pic"
+        android:text="@string/download_pic"
+        android:layout_width="wrap_content"
+        android:textColor="@color/download_pic_text_selector"
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>

@@ -25,5 +25,11 @@
     <string name="nav_setting">Setting</string>
     <string name="nav_about">About</string>
     <string name="pressed_again_exit">Pressed again to exit</string>
+    <string name="download_pic">Download picture</string>
+    <string name="data_return_null">Data return null</string>
+    <string name="add_city">Add City</string>
+    <string name="delete_city">Delete City</string>
+    <string name="if_update_picture">If update picture everyday?</string>
+    <string name="if_auto_update_data">Regularly update the data？</string>
 
 </resources>
