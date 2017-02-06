@@ -3,6 +3,7 @@
     package="com.yanzhiwei.goodweather">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name="org.litepal.LitePalApplication"
@@ -27,9 +28,15 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".SettingActivity"
-            android:label="@string/nav_setting"
-            ></activity>
+
+        <service android:name="com.yanzhiwei.goodweather.service.DownloadService" />
+
+        <activity
+            android:name=".SettingActivity"
+            android:label="@string/nav_setting" />
+        <activity
+            android:name=".DownloadActivity"
+            android:label="@string/download_pic" />
     </application>
 
 </manifest>

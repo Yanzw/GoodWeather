@@ -30,6 +30,7 @@ public class Constant {
     public static final String PERFERENCE_AUTO_UPDATE_DATA = "perference_auto_update_data";
     public static final String HE_WEATHER = "HeWeather";
     public static final String WEATHER_ID = "weather_id";
+//    public static final String DOWNLOAD_PIC_URL = "downloadPicUrl";
 
     public static final String REQUEST_WEATHER_HEAD  = "http://guolin.tech/api/weather?cityid=";
     public static final String HE_WEATHER_API_KEY = "&key="+ MY_WEATHER_MAP_API_KEY;

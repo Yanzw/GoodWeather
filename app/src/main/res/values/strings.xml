@@ -31,5 +31,17 @@
     <string name="delete_city">Delete City</string>
     <string name="if_update_picture">If update picture everyday?</string>
     <string name="if_auto_update_data">Regularly update the data？</string>
+    <string name="version_name">Version Name：</string>
+    <string name="hint_download_url">Please put download URL here</string>
+    <string name="start_download">Start Download</string>
+    <string name="pause_download">Pause Download</string>
+    <string name="cancel_download">Cancel Download</string>
+    <string name="download_url_null">Download url null</string>
+    <string name="can_not_download">Refused permission will not be able to use download function</string>
+    <string name="downloading">Downloading...</string>
+    <string name="download_success">Download Success</string>
+    <string name="download_failed">Download Failed</string>
+    <string name="download_paused">Download Paused</string>
+    <string name="download_canceled">Download Canceled</string>
 
 </resources>

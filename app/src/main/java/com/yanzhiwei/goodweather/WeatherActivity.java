@@ -2,6 +2,7 @@ package com.yanzhiwei.goodweather;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,7 +19,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -70,6 +70,7 @@ public class WeatherActivity extends AppCompatActivity {
     private ImageView navPicImg;
     private TextView aqiQualityText;
     private SharedPreferences preferences;
+    private String bingPicUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,11 +113,11 @@ public class WeatherActivity extends AppCompatActivity {
         setIntent(intent);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.toolbar, menu);
+//        return true;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -144,6 +145,16 @@ public class WeatherActivity extends AppCompatActivity {
         NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
         View navHeaderView = navView.inflateHeaderView(R.layout.nav_header);
         navPicImg = (ImageView) navHeaderView.findViewById(R.id.nav_imageview);
+        TextView downloadPic = (TextView) navHeaderView.findViewById(R.id.download_pic);
+        downloadPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(WeatherActivity.this, DownloadActivity.class);
+                startActivity(intent);
+                drawerLayout.closeDrawers();
+                LogUtil.d(TAG,"bingPicUrl = "+bingPicUrl);
+            }
+        });
         navView.setCheckedItem(R.id.nav_city);
         navView.setNavigationItemSelectedListener(new NavigationView
                 .OnNavigationItemSelectedListener() {
@@ -160,6 +171,15 @@ public class WeatherActivity extends AppCompatActivity {
                         startActivity(intentSetting);
                         break;
                     case R.id.nav_about:
+                        try {
+                            String versionName = WeatherActivity.this.getPackageManager()
+                                    .getPackageInfo(getPackageName(), 0).versionName;
+                            Toast.makeText(WeatherActivity.this,
+                                    getString(R.string.version_name) + versionName,
+                                    Toast.LENGTH_LONG).show();
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                        }
                         break;
 
                 }
@@ -221,7 +241,7 @@ public class WeatherActivity extends AppCompatActivity {
             }
         }
 
-        String bingPicUrl = preferences.getString(PERFERENCE_BING_PIC, null);
+        bingPicUrl = preferences.getString(PERFERENCE_BING_PIC, null);
         if (!TextUtils.isEmpty(bingPicUrl)) {
             Glide.with(this).load(bingPicUrl).into(bingPicImg);
             Glide.with(this).load(bingPicUrl).into(navPicImg);
@@ -338,7 +358,7 @@ public class WeatherActivity extends AppCompatActivity {
 
         boolean ifAutoUpdateData = preferences.getBoolean(PERFERENCE_AUTO_UPDATE_DATA, true);
         //启动定时更新数据的Service
-        LogUtil.d(TAG,"ifAutoUpdateData = " + ifAutoUpdateData);
+        LogUtil.d(TAG, "ifAutoUpdateData = " + ifAutoUpdateData);
         if (ifAutoUpdateData) {
             Intent intent = new Intent(this, AutoUpdateDataService.class);
             startService(intent);
@@ -350,7 +370,7 @@ public class WeatherActivity extends AppCompatActivity {
      */
     private void loadBingPic() {
         boolean ifAutoLoadPic = preferences.getBoolean(PERFERENCE_AUTO_UPDATE_PIC, true);
-        LogUtil.d(TAG,"loadBingPic = " + ifAutoLoadPic);
+        LogUtil.d(TAG, "ifloadBingPic = " + ifAutoLoadPic);
         if (!ifAutoLoadPic) {
             return;
         }
