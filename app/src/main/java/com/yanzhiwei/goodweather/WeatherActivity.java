@@ -89,9 +89,10 @@ public class WeatherActivity extends AppCompatActivity {
         super.onRestart();
         //联网查询天气数据
         String weatherId = getIntent().getStringExtra(Constant.WEATHER_ID);
-        weatherLayout.setVisibility(View.INVISIBLE);
-        mTempWeatherId = weatherId;
-        requestWeather(weatherId);
+        if (weatherId!=null &&! mTempWeatherId.equals(weatherId)){
+            mTempWeatherId = weatherId;
+            requestWeather(weatherId);
+        }
         LogUtil.d(TAG, "onRestart: weatherId =" + weatherId);
     }
 
