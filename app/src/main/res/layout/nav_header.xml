@@ -27,7 +27,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="12dp"
-        android:clickable="true"
+        android:clickable="false"
         android:text="@string/download_pic"
         android:textColor="@color/download_pic_text_selector" />
 

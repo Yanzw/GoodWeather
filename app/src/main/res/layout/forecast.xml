@@ -3,33 +3,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="15dp"
+    android:layout_margin="@dimen/layout_margin_to_window"
     android:orientation="vertical"
      android:background="@color/half_transparent">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginLeft="@dimen/layout_margin_title"
+        android:layout_marginTop="@dimen/layout_margin_title"
         android:text="@string/forecast"
         android:textColor="@android:color/white"
-        android:textSize="20sp"
+        android:textSize="@dimen/text_mid"
         tools:text="预报" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp">
+        android:paddingLeft="@dimen/padding_content"
+        android:paddingRight="@dimen/padding_content"
+        android:paddingTop="@dimen/padding_content">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="left"
+            android:gravity="center"
             android:text="@string/date"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_min"
             tools:text="日期" />
 
         <TextView
@@ -39,7 +41,7 @@
             android:gravity="center"
             android:text="@string/weather"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_min"
             tools:text="天气" />
 
         <TextView
@@ -49,7 +51,7 @@
             android:gravity="center"
             android:text="@string/temp_min"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_min"
             tools:text="最低" />
 
         <TextView
@@ -59,7 +61,7 @@
             android:gravity="center"
             android:text="@string/temp_max"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_min"
             tools:text="最高" />
 
     </LinearLayout>

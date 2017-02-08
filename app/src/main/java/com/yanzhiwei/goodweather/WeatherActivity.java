@@ -146,15 +146,16 @@ public class WeatherActivity extends AppCompatActivity {
         View navHeaderView = navView.inflateHeaderView(R.layout.nav_header);
         navPicImg = (ImageView) navHeaderView.findViewById(R.id.nav_imageview);
         TextView downloadPic = (TextView) navHeaderView.findViewById(R.id.download_pic);
-        downloadPic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(WeatherActivity.this, DownloadActivity.class);
-                startActivity(intent);
-                drawerLayout.closeDrawers();
-                LogUtil.d(TAG,"bingPicUrl = "+bingPicUrl);
-            }
-        });
+//        downloadPic.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(WeatherActivity.this, DownloadActivity.class);
+//                startActivity(intent);
+//                drawerLayout.closeDrawers();
+//                LogUtil.d(TAG,"bingPicUrl = "+bingPicUrl);
+//            }
+//        });
+
         navView.setCheckedItem(R.id.nav_city);
         navView.setNavigationItemSelectedListener(new NavigationView
                 .OnNavigationItemSelectedListener() {
@@ -336,7 +337,9 @@ public class WeatherActivity extends AppCompatActivity {
             TextView infoText = (TextView) view.findViewById(R.id.info_text);
             TextView minText = (TextView) view.findViewById(R.id.min_text);
             TextView maxText = (TextView) view.findViewById(R.id.max_text);
-            dateText.setText(forecast.date);
+            String date = forecast.date;
+            String subDate = date.substring(5,date.length());
+            dateText.setText(subDate);
             infoText.setText(forecast.condition.info_day);
             minText.setText(forecast.temperature.min);
             maxText.setText(forecast.temperature.max);

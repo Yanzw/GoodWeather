@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="15dp"
+    android:layout_margin="@dimen/layout_margin_to_window"
     android:background="@color/half_transparent"
     android:orientation="vertical">
 
@@ -11,20 +11,20 @@
         android:id="@+id/aqi_quality"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginLeft="@dimen/layout_margin_title"
+        android:layout_marginTop="@dimen/layout_margin_title"
         android:text="@string/air_quality"
         android:textColor="@android:color/white"
-        android:textSize="20sp" />
+        android:textSize="@dimen/text_mid" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_content"
             android:layout_weight="1">
 
             <TextView
@@ -32,8 +32,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:textSize="40sp"
                 android:textColor="@android:color/white"
+                android:textSize="@dimen/text_index"
                 tools:text="63" />
 
             <TextView
@@ -41,15 +41,16 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/aqi_text"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="15dp"
-                android:textColor="@android:color/white"
-                android:text="@string/aqi_index" />
+                android:layout_marginTop="@dimen/padding_content"
+                android:text="@string/aqi_index"
+                android:textColor="@android:color/white" />
 
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_content"
             android:layout_weight="1">
 
             <TextView
@@ -57,8 +58,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:textSize="40sp"
                 android:textColor="@android:color/white"
+                android:textSize="@dimen/text_index"
                 tools:text="63" />
 
             <TextView
@@ -66,9 +67,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/pm25_text"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="15dp"
-                android:textColor="@android:color/white"
-                android:text="@string/pm25_index" />
+                android:layout_marginTop="@dimen/padding_content"
+                android:text="@string/pm25_index"
+                android:textColor="@android:color/white" />
 
         </RelativeLayout>
 
